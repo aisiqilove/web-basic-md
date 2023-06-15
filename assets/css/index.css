@@ -51,7 +51,7 @@
   position: relative;
 }
 .markdown-section pre {
-  max-height: 450px;
+  /* max-height: 450px; */
   padding: 0 .7rem;
   line-height: 1.25rem;
 }
@@ -60,7 +60,7 @@
   padding: .5rem 0;
 }
 .markdown-section pre {
-  max-height: 350px;
+  /* max-height: 550px; */
 }
 /*.markdown-section pre::-webkit-scrollbar {
   width: 10px;
