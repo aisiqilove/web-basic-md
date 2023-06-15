@@ -9,6 +9,9 @@ cd newcomer-docs
 npm i -g docsify-cli
 docsify serve
 ```
+### 在线简历
+
+[我的简历.pdf](https://www.pintuma.cn/cv.html)
 
 ### 在线预览
 
