@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>实现 mergePromise 函数</title>
+  </head>
+  <body>
+    <script>
+      // 实现 mergePromise 函数，将传进去的数组按先后顺序执行，并且把返回的值先后放在数组 data 中。
+
+      const time = (timer) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, timer);
+        });
+      };
+      const ajax1 = () =>
+        time(2000).then(() => {
+          console.log(1);
+          return 1;
+        });
+      const ajax2 = () =>
+        time(1000).then(() => {
+          console.log(2);
+          return 2;
+        });
+      const ajax3 = () =>
+        time(1000).then(() => {
+          console.log(3);
+          return 3;
+        });
+
+      function mergePromise(ajaxList) {
+        // 在这里写代码
+        const data = [];
+        let promise = Promise.resolve();
+
+        ajaxList.forEach((ajax) => {
+          promise = promise
+            .then(() => {
+              return ajax();
+            })
+            .then((resolve) => {
+              data.push(resolve);
+              return data;
+            });
+        });
+
+        return promise;
+      }
+
+      mergePromise([ajax1, ajax2, ajax3]).then((data) => {
+        console.log("done");
+        console.log(data); // data 为 [1, 2, 3]
+      });
+    </script>
+  </body>
+</html>

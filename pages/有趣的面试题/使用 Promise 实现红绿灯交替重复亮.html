@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>使用 Promise 实现红绿灯交替重复亮</title>
+  </head>
+  <body>
+    <script>
+      // 红灯 3 秒亮一次，黄灯 2 秒亮一次，绿灯 1 秒亮一次，用 Promise 实现 3 个灯交替重复亮。
+      function red() {
+        console.log("red");
+      }
+      function yellow() {
+        console.log("yellow");
+      }
+      function green() {
+        console.log("green");
+      }
+
+      const light = async (timer, cb) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            cb();
+            resolve();
+          }, timer);
+        });
+      };
+
+      const step = () => {
+        Promise.resolve()
+          .then(() => {
+            return light(3000, red);
+          })
+          .then(() => {
+            return light(2000, yellow);
+          })
+          .then(() => {
+            return light(1000, green);
+          })
+          .then(() => {
+            step();
+          });
+      };
+      step();
+    </script>
+  </body>
+</html>

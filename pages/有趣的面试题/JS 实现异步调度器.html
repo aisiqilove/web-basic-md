@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JS 实现异步调度器</title>
+  </head>
+  <body>
+    <script>
+      /**
+       * 题目：JS 实现异步调度器
+       * 要求：
+       *  JS 实现一个带并发限制的异步调度器 Scheduler，保证同时运行的任务最多有 2 个
+       *  完善下面代码中的 Scheduler 类，使程序能正确输出
+       */
+
+      class Scheduler {
+        constructor(maxNum) {
+          this.taskList = [];
+          this.count = 0;
+          this.maxNum = maxNum; // 最大并发数
+        }
+        async add(promiseCreator) {
+          // 如果当前并发超过最大并发，那就进入任务队列等待
+          if (this.count >= this.maxNum) {
+            await new Promise((resolve) => {
+              this.taskList.push(resolve);
+            });
+          }
+          this.count++;
+          const result = await promiseCreator();
+
+          this.count--;
+          // 将队首出队
+          if (this.taskList.length > 0) {
+            this.taskList.shift()();
+          }
+          // 链式调用，将结果值返回出去
+          return result;
+        }
+      }
+
+      const timeout = (time) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, time);
+        });
+      };
+      const scheduler = new Scheduler(2);
+      const addTack = (time, order) => {
+        return scheduler
+          .add(() => timeout(time))
+          .then(() => console.log(order));
+      };
+      addTack(1000, "1");
+      addTack(500, "2");
+      addTack(300, "3");
+      addTack(400, "4");
+
+      // 输出：2 3 1 4
+    </script>
+  </body>
+</html>

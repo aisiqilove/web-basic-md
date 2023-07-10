@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Promise 集合</title>
+  </head>
+  <body>
+    <script>
+      // 利用promise实现隔一秒输出1，2，3
+      /**
+       * 实现函数 forEach(arr, cb)，使 cb 逐个处理 arr 中的元素
+       * 一次处理可能是同步的，也可能是异步的
+       * 要求处理完成当前元素才能处理下一个。
+       * 提示：cb 函数执行如果是异步，会返回一个 Promise
+       */
+      let arr = [1, 2, 3];
+      // 1. for循环
+      // for(let i = 0;i<arr.length;i++) {
+      //     setTimeout(() => {
+      //         console.log(arr[i])
+      //     }, (i+1) * 1000)
+      // }
+
+      const lightEach = async (arr, cb) => {
+        for (let i = 0; i < arr.length; i++) {
+          await cb(arr[i]);
+        }
+      };
+
+      const lightEach2 = (arr, cb) => {
+        arr.reduce((prev, next) => {
+          return prev.then((res1) => {
+            return cb(next);
+          });
+        }, Promise.resolve());
+      };
+
+      lightEach(arr, (n) => {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            console.log(n);
+            resolve();
+          }, 1000);
+        });
+      });
+    </script>
+  </body>
+</html>
