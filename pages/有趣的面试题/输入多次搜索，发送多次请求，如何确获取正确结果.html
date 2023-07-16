@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>输入多次搜索，发送多次请求，如何确保获取正确结果</title>
+</head>
+<body>
+    <div>
+        <input type="text">
+        <button>搜索</button>
+    </div>
+    <script>
+        let timer = null;
+        document.querySelector('button').addEventListener('click', function() {
+            clearTimeout(timer);
+            timer = setTimeout(function() {
+                console.log('发送请求');
+            }, 500);
+        });
+        // 因网络问题，500ms内，用户又输入了一次，此时，应该取消上一次的请求，重新发送请求
+        // axios 有个 cancelToken（旧） 的概念，可以用来取消请求
+        // 用 AbortController（新）
+        // AbortController 是一个控制器对象，用来管理一个或多个 DOM 请求
+        // AbortController.abort() 方法用来结束一个或多个 DOM 请求
+        // AbortController.signal 属性返回一个 AbortSignal 对象实例，它可以用来监控一个 DOM 请求并且可以用来结束该请求
+        // AbortSignal.aborted 属性是一个只读的布尔值，如果请求已经结束，则该属性为 true，否则为 false
+        // AbortSignal.onabort 属性是一个事件处理程序，当请求被终止时，该处理程序会被调用
+        // AbortSignal.addEventListener() 方法用来注册一个事件处理程序，当请求被终止时，该处理程序会被调用
+        // AbortSignal.removeEventListener() 方法用来移除一个事件处理程序
+        // AbortSignal.abort() 方法用来结束一个或多个 DOM 请求
+     
+        // 方案二 请求带上点击timer，后端返回timer，前端判断是否相等，相等才执行
+
+        // 多次相同请求，如何合并为一次请求 ？
+        // 但是，如果是用 fetch 发送请求，该如何取消请求呢？
+
+    </script>
+</body>
+</html>
