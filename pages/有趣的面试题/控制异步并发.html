@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div>
+      <p>1. 有100个异步请求，控制并发量</p>
+      <p>2. 快速执行并发请求</p>
+    </div>
+    <script>
+      const urls = [
+        "url1",
+        "url2",
+        "url3",
+        "url4",
+        "url5",
+        "url6",
+        "url7",
+        "url8",
+        "url9",
+        "url10",
+      ];
+      // setTimeout 模拟异步请求
+      const request = (data, i = 0) => {
+        let timer = 1;
+        // 模拟偶数请求慢
+        if (i % 2 == 0) {
+          timer = 3;
+        }
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            resolve(data);
+          }, 1000 * timer);
+        });
+      };
+      let result = [];
+      let queue = [...urls];
+      let syncCount = 3;
+      let count = 0;
+      // 1. 控制并行
+      function promiseMulti(count) {
+        let arr = [];
+        for (let i = 0; i < count; i++) {
+          let item = queue.shift();
+          arr.push(request(item));
+        }
+        if (arr.length) {
+          Promise.all(arr).then((res) => {
+            // console.log(res);
+            // result.push(...res);
+            if (queue.length > 0) {
+              promiseMulti(count);
+            }
+          });
+        }
+      }
+      promiseMulti(syncCount);
+      // 2. 串行
+      let queue2 = [...urls];
+      function promiseSerial() {
+        let item = queue2.shift();
+        if (item) {
+          request(item).then((res) => {
+            result.push(res);
+            if (queue.length > 0) {
+              promiseSerial();
+            }
+          });
+        }
+      }
+      promiseSerial();
+
+      // 3. 并行
+      let queue3 = [...urls];
+      function promiseParallel() {
+        let arr = [];
+        for (let i = 0; i < queue3.length; i++) {
+          let item = queue3[i];
+          arr.push(request(item));
+        }
+        Promise.all(arr).then((res) => {
+          //   console.log(res);
+        });
+      }
+      promiseParallel();
+
+      // 4. 快速执行并发请求
+      let queue4 = [...urls];
+      function promiseFast(promiseList = [], limit = 3) {
+        const len = promiseList.length;
+        const res = new Array(len).fill(false);
+        const result = []; // 保存执行顺序结果
+        let count = 0;
+        return new Promise((resolve, reject) => {
+          const next = (i) => {
+            request(promiseList[i], i)
+              .then((r) => (res[i] = r))
+              .catch((r) => (res[i] = r))
+              .finally(() => {
+                result.push(promiseList[i]);
+                if (count < len) {
+                  next(count++);
+                } else if (!res.includes(false)) {
+                  console.log(res, "-----res");
+                  console.log(result, "-----result");
+                  resolve(res);
+                }
+              });
+          };
+          while (count < limit) {
+            next(count++);
+          }
+        });
+      }
+
+      promiseFast(queue4);
+    </script>
+  </body>
+</html>
