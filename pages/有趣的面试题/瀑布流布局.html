@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      img {
+        position: absolute;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container"></div>
+    <script>
+      const divContainer = document.querySelector(".container");
+      var imgWidth = 200;
+      let clientWidth = document.documentElement.clientWidth;
+      //计算出应该放几列（向下取整）
+      let columnCount = Math.floor(clientWidth / imgWidth);
+      // 1. 创建图片
+      function createImgs() {
+        for (let index = 0; index < 40; index++) {
+          const img = document.createElement("img");
+          img.src = `https://picsum.photos/${200}/${
+            200 + (index % 2 === 0 ? index * 10 : index * 20)
+          }/?random`;
+          img.dataset.index = index;
+          img.onload = setPositions;
+          divContainer.appendChild(img);
+        }
+      }
+      function setPositions() {
+        const { columns, space } = cal();
+        var nextTops = new Array(columns).fill(0);
+        for (let index = 0; index < divContainer.children.length; index++) {
+          const img = divContainer.children[index];
+          var minTop = Math.min(...nextTops);
+          var minTopIndex = nextTops.indexOf(minTop);
+          var left = minTopIndex * (imgWidth + space) + space;
+          var top = minTop;
+          img.style.left = left + "px";
+          img.style.top = top + "px";
+          nextTops[minTopIndex] += img.height + space;
+        }
+        divContainer.style.height = Math.max(...nextTops) + "px";
+      }
+      function cal() {
+        var containerW = divContainer.clientWidth;
+        var columns = Math.floor(containerW / imgWidth);
+        var space = (containerW - columns * imgWidth) / (columns + 1);
+        return {
+          columns,
+          space,
+        };
+      }
+      createImgs();
+      var timer = null;
+      window.onresize = () => {
+        if (timer) {
+          clearTimeout(timer);
+        }
+        timer = setTimeout(() => {
+          setPositions();
+        }, 500);
+      };
+    </script>
+  </body>
+</html>
