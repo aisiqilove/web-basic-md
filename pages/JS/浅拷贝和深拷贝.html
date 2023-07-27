@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>浅拷贝和深拷贝</title>
+  </head>
+  <body>
+    <div>
+      <h3>前置知识点：</h3>
+      <div>
+        <p>我们复制引用基础数据类型，都是拷贝对应的值</p>
+        <p>我们复制引用复杂数据类型，都是拷贝对应的址</p>
+      </div>
+      <h3>浅拷贝</h3>
+      <p>浅拷贝</p>
+      <div>
+        <p>1.Object.assign(target,obj)</p>
+        <p>2.[].concat</p>
+        <p>3.拓展运算符 [...array] {...object}</p>
+      </div>
+
+      <h3>深拷贝</h3>
+      <div>
+        <p>
+          借助 JSON.parse(JSON.stringify()) 问题 1.循环引用 2. Set Map Symbol 3.
+          function 4. Undefined等等
+        </p>
+        <p>借助第三方库 Lodash、jQuery 等</p>
+        <p>手写deepClone</p>
+      </div>
+    </div>
+
+    <script>
+      let arr = [1, 2, 3];
+      let obj = {
+        name: "obj",
+        age: 18,
+        phone: [123, 456],
+        likes: [{ type: "娱乐", title: "打游戏" }],
+      };
+
+      let copyObj = Object.assign({}, obj);
+      let copyObj2 = { ...obj };
+      obj.name = "update name";
+      obj.phone.push(789);
+      obj.likes.push({ title: "羽毛球" });
+
+      copyObj.likes[1].extend = { props: "copyObj 拓展下" };
+
+      copyObj2.phone = [110];
+      copyObj2.likes = [{}];
+
+      //   console.log(obj, "obj");
+      //   console.log(copyObj, "copyObj");
+      //   console.log(copyObj2, "copyObj2");
+    </script>
+
+    <script>
+      function isObject(obj) {
+        if (typeof obj === "object" && obj !== null) {
+          return true;
+        }
+        return false;
+      }
+      // hash 用来解决循环引用的问题 WeakMap弱引用
+      function deepClone(obj, hash = new WeakMap()) {
+        // function
+        if (typeof obj === "function") return obj;
+        //  symbol
+        if (typeof obj === "symbol") {
+          return Symbol(obj.description);
+        }
+        // Set
+        if (obj instanceof Set) {
+          let newSet = new Set();
+          for (let item of obj) {
+            newSet.add(deepClone(item));
+          }
+          return newSet;
+        }
+        // Map
+        if (obj instanceof Map) {
+          let newMap = new Map();
+          for (let [key, value] of obj) {
+            newMap.set(key, deepClone(value));
+          }
+          return newMap;
+        }
+        if (!isObject(obj)) return obj;
+        if (hash.has(obj)) return hash.get(obj);
+
+        let target = Array.isArray(obj) ? [] : {};
+        hash.set(obj, target);
+
+        for (let k in obj) {
+          if (Object.hasOwn(obj, k)) {
+            if (isObject(obj[k])) {
+              target[k] = deepClone(obj[k], hash);
+            } else {
+              target[k] = obj[k];
+            }
+          }
+        }
+        // symbol属性
+        let symbolKeys = Object.getOwnPropertySymbols(obj);
+
+        for (let symbolItem of symbolKeys) {
+          target[Symbol(symbolItem.description)] = deepClone(
+            obj[symbolItem],
+            hash
+          );
+        }
+        return target;
+      }
+      let object1 = { name: "obj", age: 18 };
+      let a = Symbol("symbolA key");
+      object1[a] = "symbolA value";
+
+      let newObj = deepClone(object1);
+
+      newObj.name = "newObj";
+      console.log(object1, "object1");
+      console.log(newObj, "newObj");
+    </script>
+  </body>
+</html>
