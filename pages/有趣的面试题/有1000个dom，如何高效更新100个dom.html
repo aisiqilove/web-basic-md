@@ -1,16 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
     <div>
-        <p>有1000个dom，如何高效更新100个dom</p>
+      <p>有1000个dom，如何高效更新100个dom</p>
+
+      <ul id="my-list">
+        <li>
+          <a>one</a>
+        </li>
+        <li>
+          <a>two</a>
+        </li>
+      </ul>
     </div>
     <script>
-        
+      var data = [
+        {
+          name: "third",
+          url: "3",
+        },
+        {
+          name: "forth",
+          url: "4",
+        },
+      ];
+      function appendDataToElement(appendToElement, data) {
+        var a, li;
+        for (var i = 0, max = data.length; i < max; i++) {
+          a = document.createElement("a");
+          a.href = data[i].url;
+          a.appendChild(document.createTextNode(data[i].name));
+          li = document.createElement("li");
+          li.appendChild(a);
+          appendToElement.appendChild(li);
+        }
+      }
+
+      var fragment = document.createDocumentFragment();
+      appendDataToElement(fragment, data);
+      document.getElementById("my-list").appendChild(fragment);
+
+      var fragment2 = document.createDocumentFragment();
+
+      for (let i = 0; i < 100; i++) {
+        li = document.createElement("li");
+        li.innerHTML = i;
+        fragment2.appendChild(li);
+      }
+      requestAnimationFrame(() => {
+        document.getElementById("my-list").appendChild(fragment2);
+      });
+      for (let i = 100; i < 200; i++) {
+        li = document.createElement("li");
+        li.innerHTML = i;
+        fragment2.appendChild(li);
+      }
+
+      // requestIdleCallback  的 FPS 只有 20  , 这远远低于页面流畅度的要求！(一般 FPS 为 60 时对用户来说是感觉流程的, 即一帧时间为 16.7 ms), 这也是 React 需要自己实现
+      requestIdleCallback(
+        (IdleDeadline) => {
+          console.log(IdleDeadline, "IdleDeadline");
+          document.getElementById("my-list").appendChild(fragment2);
+        },
+        { timeout: 5000 }
+      );
     </script>
-</body>
+  </body>
 </html>
