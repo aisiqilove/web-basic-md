@@ -19,9 +19,19 @@
 const path = require("path");
 module.exports = {
     entry: "./src/index.js",
+    // entry: [
+    //     "./src/index.js"
+    //     "./src/index.js"
+    // ],
+    // entry: {
+        // main: "./src/index.js",
+        // a: "./src/a.js",
+        // b: "./src/b.js",
+    // },
     output: {
         path: path.resolve(__dirname, "./dist"),
         filename: "main.js",
+        // filename: "[name].[hash].js",
     },
     mode: "development",
 };
