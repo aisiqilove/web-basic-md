@@ -28,7 +28,7 @@
         let timer = 1;
         // 模拟偶数请求慢
         if (i % 2 == 0) {
-          timer = 3;
+          timer = 1;
         }
         return new Promise((resolve, reject) => {
           setTimeout(() => {
@@ -57,7 +57,8 @@
           });
         }
       }
-      promiseMulti(syncCount);
+      promiseMulti(syncCount)
+
       // 2. 串行
       let queue2 = [...urls];
       function promiseSerial() {
