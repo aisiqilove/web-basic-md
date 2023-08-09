@@ -1,0 +1,22 @@
+{
+    "scripts": {
+        "start": "node app.js",
+        "deploy": "git push deploy master"
+    },
+    "config": {
+        "deploy": {
+            "production": {
+                "user": "root",
+                "host": "your_server_ip",
+                "ref": "origin/master",
+                "repo": "ssh://git@your_server_ip:/root/myapp.git",
+                "path": "/var/www/html/myapp",
+                "ssh_options": [
+                    "StrictHostKeyChecking=no",
+                    "PasswordAuthentication=no"
+                ],
+                "post-deploy": "npm install && pm2 restart app"
+            }
+        }
+    }
+}

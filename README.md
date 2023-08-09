@@ -90,14 +90,14 @@ docsify serve
 
 > #### React
 
-- [react中key是什么，有什么用处？]()
-- [refs是什么，如何使用，需要注意什么？]()
-- [生命周期]()
-- [事件系统]()
-- [setState]()
-- [组件通信]()
-- [函数组件与class组件如何选择]()
-- [React性能优化方案]()
+- [react中key是什么，有什么用处？](./pages/React/)
+- [refs是什么，如何使用，需要注意什么？](./pages/React/)
+- [生命周期](./pages/React/)
+- [事件系统](./pages/React/)
+- [setState](./pages/React/)
+- [组件通信](./pages/React/)
+- [函数组件与class组件如何选择](./pages/React/)
+- [React性能优化方案](./pages/React/)
 
 > #### WebPack
 
@@ -113,8 +113,8 @@ docsify serve
 
 > #### 有趣的面试题
 
-- [一个页面有多少个种标签,每种多少个]()
-- [字节：去重，对象属性相同也认为是重复的]()
+- [一个页面有多少个种标签,每种多少个](./pages/有趣的面试题/)
+- [字节：去重，对象属性相同也认为是重复的](./pages/有趣的面试题/)
 - [字节：实现一个CodingMan.md](./pages/%E6%9C%89%E8%B6%A3%E7%9A%84%E9%9D%A2%E8%AF%95%E9%A2%98/%E5%AD%97%E8%8A%82%EF%BC%9A%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AACodingMan.md)
 
 > #### 项目需求解决方案
