@@ -18,5 +18,8 @@
                 "post-deploy": "npm install && pm2 restart app"
             }
         }
+    },
+    "dependencies": {
+        "docsify-cli": "^4.4.4"
     }
 }
